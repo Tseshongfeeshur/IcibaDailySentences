@@ -15,7 +15,7 @@ read -r speak < mydir/tmp.txt
 mkdir output
 echo "{\"Date\":\"${date}\",\"InEnglish\":\"${en}\",\"InChinese\":\"${cn}\",\"Picture\":\"${pic}\",\"Speaking\":\"${speak}\"}" | jq . > output/info.json
 curl "${pic}" -o output/picture.jpg
-curl ""${speak}" -o output/Speaking.mp3
+curl ""${speak}" -o output/speaking.mp3
 mkdir temp
 cd temp
 git init
