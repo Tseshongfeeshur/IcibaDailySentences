@@ -1,0 +1,39 @@
+name: 每日一句更新
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 16 * * *' # UTC时间的0:30
+
+env:
+  TIMEZONE: "Asia/Shanghai"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure SSH
+        run: |
+          sudo timedatectl set-timezone "${{ env.TIMEZONE }}"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SubKey }}" > ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Set up Git
+        run: |
+          git config --global user.email "Yuanzhehan@yeah.net"
+          git config --global user.name "Tseshongfeeshur"
+
+      - name: Run action.sh
+        run: |
+          cd ${{ github.workspace }}
+          chmod +x ./action.sh
+          sudo apt update
+          sudo apt install dos2unix
+          dos2unix action.sh
+          ./action.sh
